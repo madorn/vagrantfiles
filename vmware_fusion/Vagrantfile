@@ -6,14 +6,14 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "ferventcoder/win7pro-x64-nocm-lite"
+  config.vm.box = "yourbox"
 
   # Turn off shared folders
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
 
   # Begin server1
   config.vm.define "server1" do |server1|
-    server1.vm.hostname = "trovetest"
+    server1.vm.hostname = "hostname"
 
     server1.vm.provider "vmware_fusion" do |v|
       vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
@@ -39,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #        v.customize [ "modifyvm", :id, "--memory", "1024" ]
 #    end
 
-    server1.vm.network "private_network", ip: "192.168.56.56"
+    server1.vm.network "private_network", ip: "0.0.0.0"
   end
 end
   # End server1
