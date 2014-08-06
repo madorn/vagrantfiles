@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "ferventcoder/win7pro-x64-nocm-lite"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
+
+  # Begin server1
+  config.vm.define "server1" do |server1|
+    server1.vm.hostname = "trovetest"
+
+    server1.vm.provider "vmware_fusion" do |v|
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "#{ENV['PWD']}/.vagrant/additional-disks"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/hd2.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 10GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+        v.vmx["numvcpus"] = "2"
+        v.vmx["memsize"] = "8192"
+        v.vmx["vhv.enable"] = "TRUE"
+        v.gui = "true"
+        v.vmx['scsi0:1.filename'] = file_to_disk
+        v.vmx['scsi0:1.present']  = 'TRUE'
+        v.vmx['scsi0:1.redo']     = ''
+      end
+
+#    server1.vm.provider "virtualbox" do |v|
+#        v.customize [ "modifyvm", :id, "--cpus", "1" ]
+#        v.customize [ "modifyvm", :id, "--memory", "1024" ]
+#    end
+
+    server1.vm.network "private_network", ip: "192.168.56.56"
+  end
+end
+  # End server1
