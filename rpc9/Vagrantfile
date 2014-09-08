@@ -1,0 +1,176 @@
+# -*- mode: ruby -*-
+
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = "chef/ubuntu-14.04"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
+
+  # Begin infra1
+  config.vm.define "infra1" do |infra1|
+    infra1.vm.hostname = "infra1"
+
+    infra1.vm.provider "vmware_fusion" do |v|
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "/Volumes/Untitled/rpc9"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/infra1.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 200GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+        v.vmx["numvcpus"] = "1"
+        v.vmx["memsize"] = "4096"
+        v.vmx["vhv.enable"] = "TRUE"
+        v.gui = "true"
+        v.vmx['scsi0:1.filename'] = file_to_disk
+        v.vmx['scsi0:1.present']  = 'TRUE'
+        v.vmx['scsi0:1.redo']     = ''
+      end
+
+    infra1.vm.network "private_network", ip: "192.168.56.56", :adapter => 2,
+	auto_config: false
+    infra1.vm.network "private_network", ip: "192.168.57.56", :adapter => 3,
+	auto_config: false
+    infra1.vm.network "private_network", ip: "192.168.58.56", :adapter => 4,
+	auto_config: false
+
+    infra1.vm.provision :shell, path: "infra1.sh"
+
+end
+  # End infra1
+
+   # Begin infra2
+  config.vm.define "infra2" do |infra2|
+    infra2.vm.hostname = "infra2"
+
+    infra2.vm.provider "vmware_fusion" do |v|
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "/Volumes/Untitled/rpc9"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/infra2.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 200GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+        v.vmx["numvcpus"] = "1"
+        v.vmx["memsize"] = "4096"
+        v.vmx["vhv.enable"] = "TRUE"
+        v.gui = "true"
+        v.vmx['scsi0:1.filename'] = file_to_disk
+        v.vmx['scsi0:1.present']  = 'TRUE'
+        v.vmx['scsi0:1.redo']     = ''
+      end
+
+    infra2.vm.network "private_network", ip: "192.168.56.57", :adapter => 2
+    infra2.vm.network "private_network", ip: "192.168.57.57", :adapter => 3
+    infra2.vm.network "private_network", ip: "192.168.58.57", :adapter => 4
+
+        infra2.vm.provision :shell, path: "infra2.sh"
+
+  end
+  # End infra2
+
+ # Begin infra3
+  config.vm.define "infra3" do |infra3|
+    infra3.vm.hostname = "infra3"
+
+    infra3.vm.provider "vmware_fusion" do |v|
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "/Volumes/Untitled/rpc9"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/infra3.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 200GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+        v.vmx["numvcpus"] = "1"
+        v.vmx["memsize"] = "4096"
+        v.vmx["vhv.enable"] = "TRUE"
+        v.gui = "true"
+        v.vmx['scsi0:1.filename'] = file_to_disk
+        v.vmx['scsi0:1.present']  = 'TRUE'
+        v.vmx['scsi0:1.redo']     = ''
+      end
+
+    infra3.vm.network "private_network", ip: "192.168.56.58", :adapter => 2
+    infra3.vm.network "private_network", ip: "192.168.57.58", :adapter => 3
+    infra3.vm.network "private_network", ip: "192.168.58.58", :adapter => 4
+
+            infra3.vm.provision :shell, path: "infra3.sh"
+
+  end
+  # End infra3
+
+ # Begin logger1
+  config.vm.define "logger1" do |logger1|
+    logger1.vm.hostname = "logger1"
+
+    logger1.vm.provider "vmware_fusion" do |v|
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "/Volumes/Untitled/rpc9"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/logger1.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 200GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+        v.vmx["numvcpus"] = "1"
+        v.vmx["memsize"] = "2048"
+        v.vmx["vhv.enable"] = "TRUE"
+        v.gui = "true"
+        v.vmx['scsi0:1.filename'] = file_to_disk
+        v.vmx['scsi0:1.present']  = 'TRUE'
+        v.vmx['scsi0:1.redo']     = ''
+      end
+
+    logger1.vm.network "private_network", ip: "192.168.56.59", :adapter => 2
+    logger1.vm.network "private_network", ip: "192.168.57.59", :adapter => 3
+    logger1.vm.network "private_network", ip: "192.168.58.59", :adapter => 4
+
+    logger1.vm.provision :shell, path: "logger1.sh"
+
+  end
+  # End logger1
+
+# Begin compute1
+  config.vm.define "compute1" do |compute1|
+    compute1.vm.hostname = "compute1"
+
+    compute1.vm.provider "vmware_fusion" do |v|
+      vdiskmanager = '/Applications/VMware\ Fusion.app/Contents/Library/vmware-vdiskmanager'
+      dir = "/Volumes/Untitled/rpc9"
+      unless File.directory?( dir )
+        Dir.mkdir dir
+      end
+      file_to_disk = "#{dir}/compute1.vmdk"
+      unless File.exists?( file_to_disk )
+        `#{vdiskmanager} -c -s 200GB -a lsilogic -t 0 #{file_to_disk}`
+      end
+        v.vmx["numvcpus"] = "1"
+        v.vmx["memsize"] = "2048"
+        v.vmx["vhv.enable"] = "TRUE"
+        v.gui = "true"
+        v.vmx['scsi0:1.filename'] = file_to_disk
+        v.vmx['scsi0:1.present']  = 'TRUE'
+        v.vmx['scsi0:1.redo']     = ''
+      end
+
+    compute1.vm.network "private_network", ip: "192.168.56.60", :adapter => 2
+    compute1.vm.network "private_network", ip: "192.168.57.60", :adapter => 3
+    compute1.vm.network "private_network", ip: "192.168.58.60", :adapter => 4
+
+    compute1.vm.provision :shell, path: "compute1.sh"
+
+  end
+end
+  # End compute1
