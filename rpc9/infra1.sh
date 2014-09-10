@@ -1,6 +1,6 @@
 # Update and System
 apt-get update
-apt-get upgrade
+apt-get -y upgrade
 
 # Ensure RPC Supported Kernel Is Installed
 apt-get install -y linux-image-extra-3.13.0-34-generic
