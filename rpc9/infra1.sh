@@ -12,15 +12,6 @@ apt-get install -y bridge-utils lsof lvm2 ntp ntpdate openssh-server sudo tcpdum
 pvcreate --metadatasize 2048 /dev/sdb
 vgcreate lxc /dev/sdb
 
-# Set hosts file
-cat >> /etc/hosts <<EOF
-192.168.56.56   infra1
-192.168.56.57   infra2
-192.168.56.58   infra3
-192.168.56.59   logger1
-192.168.56.60   compute1
-EOF
-
 # Configure Networking
 cat >> /etc/network/interfaces <<EOF
 
