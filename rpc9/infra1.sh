@@ -1,12 +1,12 @@
 # Update and System
-apt-get update
+apt-get -y update
 apt-get -y upgrade
 
 # Ensure RPC Supported Kernel Is Installed
 apt-get install -y linux-image-extra-3.13.0-34-generic
 
 # Install Necessary Base Packages
-apt-get install -y bridge-utils lsof lvm2 ntp ntpdate openssh-server sudo tcpdump
+apt-get install -y vim curl git bridge-utils lsof lvm2 ntp ntpdate openssh-server sudo tcpdump
 
 # Create The 'lxc' Volume Group
 pvcreate --metadatasize 2048 /dev/sdb
